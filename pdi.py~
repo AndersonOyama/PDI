@@ -3,9 +3,6 @@ import math
 import cv2
 import argparse
 
-from math import floor
-from itertools import product
-
 COLOR_SPACE = 255
 RED = []
 GREEN = []
@@ -18,12 +15,12 @@ parser.add_argument('num_div', help='number of division', type=int)
 args = parser.parse_args()
 
 
-def partition_mul():
+def partition_mul(n):
     div = []
     d = 2
-    while args.num_div > 1:
-    	if args.num_div%d == 0:
-    		args.num_div = args.num_div/d
+    while n > 1:
+    	if n%d == 0:
+    		n = n/d
     		div.append(d)
     	else:
     		d += 1
@@ -38,37 +35,26 @@ def partition_mul():
     elif (len(num)<=1 and len(num)>=0):
         num.append(1)
         num.append(1)
-
-
     return div
 
-def distance_cal():
-    return
 
-
-
-def color_def(value, n):
-    color_div = []
-    print(value, n)
-    for i in range (0,n):
-        print(value*(i+1))
-        color_div.append(floor((i+1)*value))
-
-    return color_div
+def distance_color():
+    a = 0
 
 img = cv2.imread(args.file, 1)
 num = []
-coordenates = []
-num = partition_mul()
+num = partition_mul(args.num_div)
 
 print(num)
 
-RED = color_def(abs(COLOR_SPACE/(num[0]+1)), num[0])
-GREEN = color_def(abs(COLOR_SPACE/(num[1]+1)), num[1])
-BLUE = color_def(abs(COLOR_SPACE/(num[2]+1)), num[2])
+RED.append(COLOR_SPACE//(num[0]+1))
+GREEN.append(COLOR_SPACE//(num[1]+1))
+BLUE.append(COLOR_SPACE//num[2]+1)
 
-print(RED, ',', GREEN, ',', BLUE)
+for i, j in enumerate(num):
+    
 
+print(RED)
 # cv2.imshow('imagem', img)
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
