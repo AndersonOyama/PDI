@@ -17,7 +17,7 @@ parser.add_argument('file', help='file directory', type=str)
 parser.add_argument('num_div', help='number of division', type=int)
 args = parser.parse_args()
 
-
+#ENCONTRA OS VALORES DECOMPOSTO DO SPECTRO DE CORES PASSADO
 def partition_mul():
     div = []
     d = 2
@@ -44,7 +44,7 @@ def distance_cal():
     return
 
 
-
+#DEFINIÇÃO DOS PONTOS DE CADA COR.
 def color_def(value, n):
     color_div = []
     for i in range (0,n):
@@ -57,15 +57,15 @@ coordenates = []
 num = partition_mul()
 
 
-RED = color_def(abs(COLOR_SPACE/(num[0]+1)), num[0])
-GREEN = color_def(abs(COLOR_SPACE/(num[1]+1)), num[1])
-BLUE = color_def(abs(COLOR_SPACE/(num[2]+1)), num[2])
+RED = color_def(abs(COLOR_SPACE/(num[0]+1)), num[0]) #a
+GREEN = color_def(abs(COLOR_SPACE/(num[1]+1)), num[1]) #b
+BLUE = color_def(abs(COLOR_SPACE/(num[2]+1)), num[2]) #c
 
-print(RED, ',', GREEN, ',', BLUE)
 
 coordenates = list(product(RED, BLUE, GREEN, repeat = 1))
-print(coordenates)
 
+img[np.where((img == [255,255,255]).all(axis=2))] = [0,0,0]
+cv2.imwrite('temp.png', img)
 # cv2.imshow('imagem', img)
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
