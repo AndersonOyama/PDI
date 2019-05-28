@@ -38,8 +38,6 @@ def partition_mul():
     elif (len(num)<=1 and len(num)>=0):
         num.append(1)
         num.append(1)
-
-
     return div
 
 def distance_cal():
@@ -49,11 +47,8 @@ def distance_cal():
 
 def color_def(value, n):
     color_div = []
-    print(value, n)
     for i in range (0,n):
-        print(value*(i+1))
         color_div.append(floor((i+1)*value))
-
     return color_div
 
 img = cv2.imread(args.file, 1)
@@ -61,13 +56,15 @@ num = []
 coordenates = []
 num = partition_mul()
 
-print(num)
 
 RED = color_def(abs(COLOR_SPACE/(num[0]+1)), num[0])
 GREEN = color_def(abs(COLOR_SPACE/(num[1]+1)), num[1])
 BLUE = color_def(abs(COLOR_SPACE/(num[2]+1)), num[2])
 
 print(RED, ',', GREEN, ',', BLUE)
+
+coordenates = list(product(RED, BLUE, GREEN, repeat = 1))
+print(coordenates)
 
 # cv2.imshow('imagem', img)
 # cv2.waitKey(0)
