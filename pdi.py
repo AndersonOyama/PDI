@@ -51,6 +51,9 @@ RED.append(COLOR_SPACE//(num[0]+1))
 GREEN.append(COLOR_SPACE//(num[1]+1))
 BLUE.append(COLOR_SPACE//num[2]+1)
 
+for i, j in enumerate(num):
+    
+
 print(RED)
 # cv2.imshow('imagem', img)
 # cv2.waitKey(0)
