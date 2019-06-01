@@ -1,6 +1,4 @@
 import numpy as np
-import math
-import cv2
 import argparse
 
 from math import floor
@@ -69,34 +67,31 @@ def color_def(value, n):
 im = Image.open(args.file)
 pix = im.load()
 
-img = cv2.imread(args.file)
-
 num = []
 coordenates = []
 num = partition_mul()
-
 
 RED = color_def(abs(COLOR_SPACE/(num[0]+1)), num[0]) #a
 GREEN = color_def(abs(COLOR_SPACE/(num[1]+1)), num[1]) #b
 BLUE = color_def(abs(COLOR_SPACE/(num[2]+1)), num[2]) #c
 
 
-coordenates = list(product(BLUE, GREEN, RED, repeat = 1))
+coordenates = list(product(RED, GREEN, BLUE, repeat = 1))
 
 weigh = im.size[0]
 height = im.size[1]
-# print(weigh, height)
+
 
 for x in range(0, weigh):
     for y in range(0, height):
-        # print(distance_cal(coordenates, pix[x,y]))
+
         pix[x,y] = distance_cal(coordenates, pix[x,y])
 
 im.show()
 nome_output = args.file.replace(".", "_colored.")
 im.save(nome_output)
-# img[np.where((img == [255,255,255]).all(axis=2))] = [0,0,0]
-# cv2.imwrite('temp.png', img)
+
+
 # cv2.imshow('imagem', img)
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
