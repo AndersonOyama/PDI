@@ -4,7 +4,9 @@ import cv2
 import argparse
 
 from math import floor
+from scipy.spatial import distance
 from itertools import product
+from PIL import Image
 
 COLOR_SPACE = 255
 RED = []
@@ -33,16 +35,28 @@ def partition_mul():
         del div[0]
         div.append(temp)
         div.sort()
-    if(len(num) < 3 and len(num) >= 2):
-        num.append(1)
-    elif (len(num)<=1 and len(num)>=0):
-        num.append(1)
-        num.append(1)
+
+    if(len(div) < 3 and len(div) >= 2):
+        div.append(1)
+    elif (len(div) < 2 and len(div) >= 1):
+        div.append(1)
+        div.append(1)
+    elif (len(div) <= 0):
+        div.append(1)
+        div.append(1)
+        div.append(1)
     return div
 
-def distance_cal():
-    return
 
+def distance_cal(color_spec, color):
+    dst = float('inf')
+    coordenate_color = 1
+    for i, val in enumerate(color_spec):
+        temp = distance.euclidean(val, color)
+        if (dst > temp):
+            dst = temp
+            coordenate_color = i
+    return color_spec[coordenate_color]
 
 #DEFINIÇÃO DOS PONTOS DE CADA COR.
 def color_def(value, n):
@@ -51,7 +65,12 @@ def color_def(value, n):
         color_div.append(floor((i+1)*value))
     return color_div
 
-img = cv2.imread(args.file, 1)
+
+im = Image.open(args.file)
+pix = im.load()
+
+img = cv2.imread(args.file)
+
 num = []
 coordenates = []
 num = partition_mul()
@@ -62,10 +81,22 @@ GREEN = color_def(abs(COLOR_SPACE/(num[1]+1)), num[1]) #b
 BLUE = color_def(abs(COLOR_SPACE/(num[2]+1)), num[2]) #c
 
 
-coordenates = list(product(RED, BLUE, GREEN, repeat = 1))
+coordenates = list(product(BLUE, GREEN, RED, repeat = 1))
 
-img[np.where((img == [255,255,255]).all(axis=2))] = [0,0,0]
-cv2.imwrite('temp.png', img)
+weigh = im.size[0]
+height = im.size[1]
+# print(weigh, height)
+
+for x in range(0, weigh):
+    for y in range(0, height):
+        # print(distance_cal(coordenates, pix[x,y]))
+        pix[x,y] = distance_cal(coordenates, pix[x,y])
+
+im.show()
+nome_output = args.file.replace(".", "_colored.")
+im.save(nome_output)
+# img[np.where((img == [255,255,255]).all(axis=2))] = [0,0,0]
+# cv2.imwrite('temp.png', img)
 # cv2.imshow('imagem', img)
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
