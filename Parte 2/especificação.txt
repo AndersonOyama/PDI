@@ -1,0 +1,126 @@
+CORRELAÇÃO
+
+O objetivo deste trabalho é comparar duas abordagens diferentes de implementacao da correlação, em relação ao tempo de processamento, utilizando a linguagem Python.
+
+O programa deve receber uma imagem f (de tamanho m x n) e uma mascara g (de tamanho 3 x 3, com centro no meio) e calcular a correlação pelas duas abordagens, anotando e comparando o tempo de processamento destas abordagens.
+
+1) a primeira implementacao consiste em varrer a imagem, pixel a pixel, posicionando a máscara centrada em cada pixel e realizando as multiplicações e a soma resultante para este pixel.
+
+2) a segunda implementacao é através da translacao da imagem por vetores definidos pelas posições da máscara, relativas ao centro desta. Cada posição define um vetor que, ao ser invertido, será responsavel pela translacao da imagem. Após transladar a imagem pelo vetor associado à posição p da máscara, multiplique todos os elementos desta imagem transladada pelo peso atribuido à máscara na posição p. Faça uma translação para cada posição da máscara, como descrito. Finalmente, as matrizes transladas resultantes são todas somadas. Abaixo seguem dois exemplos para esta abordagem.
+
+Exemplo 1:
+
+Considere as matrizes abaixo como, respectivamente a imagem f (3x3) e a máscara de correlação g (3x3) com centro indicado por um asterisco.
+
+     |1 2 3|
+f = |4 5 6|
+     |7 8 9|
+
+      |1 1 1|
+g = |1 1* 1|
+      |1 1 1|
+
+Considere as coordenadas relativas ao centro da máscara, dadas pela matriz abaixo:
+
+|(-1,-1)  (-1,0)  (-1,1)|
+|(0,-1)   (0,0)    (0,1)|
+|(1,-1)   (1,0)   ( 1,1)|
+
+Podemos criar um conjunto de nove elementos associado a estas coordenadas, contendo a coordenada multiplicada por -1, e o peso atribuido à mascara nesta coordenada:
+(-1,-1) -> [(1,1), 1]
+(-1,0) -> [(1,0), 1]
+(-1,1) -> [(1,-1), 1]
+(0,-1) -> [(0,1), 1]
+(0,0) -> [(0,0), 1]
+(0,1) -> [(0,-1), 1]
+(1,-1) -> [(-1,1), 1]
+(1,0) -> [(-1,0), 1]
+(1,1) -> [(-1,-1), 1]
+
+Para cada elemento deste conjunto, voce deve transladar a imagem (que será considerada neste trabalho como zero-padded para tratamento de borda) pelo vetor-translacao e, em seguida, multiplicar a matriz transladada pelo respectivo peso associado.
+
+[(1,1), 1]           [(1,0), 1]           [(1,-1), 1]
+|0 0 0|              |0 0 0|               |0 0 0|
+|0 1 2|              |1 2 3|               |2 3 0|
+|0 4 5|              |4 5 6|               |5 6 0|
+
+[(0,1), 1]           [(0,0), 1]           [(0,-1), 1]
+|0 1 2|              |1 2 3|               |2 3 0|
+|0 4 5|              |4 5 6|               |5 6 0|
+|0 7 8|              |7 8 9|               |8 9 0|
+
+[(-1,1), 1]         [(-1,0), 1]           [(-1,-1), 1]
+|0 4 5|              |4 5 6|               |5 6 0|
+|0 7 8|              |7 8 9|               |8 9 0|
+|0 0 0|              |0 0 0|               |0 0 0|
+
+
+Em seguida, somam-se as imagens resultantes acima para a composição do resultado final:
+
+|12   21   16|
+|27   45   33|
+|24   39   28|
+
+
+Exemplo 2:
+
+Considere as matrizes abaixo como, respectivamente a imagem f (3x3) e a máscara de correlação g (3x3) com centro indicado por um asterisco.
+
+     |1 2 3|
+f = |4 5 6|
+     |7 8 9|
+
+      |1  2  1|
+g = |2  4* 2|
+      |1  2  1|
+
+Considere as coordenadas relativas ao centro da máscara, dadas pela matriz abaixo:
+
+|(-1,-1) (-1,0) (-1,1)|
+|(0,-1) (0,0) (0,1)|
+|(1,-1) (1,0) (1,1)|
+
+Podemos criar um conjunto de nove elementos associado a estas coordenadas, contendo a coordenada multiplicada por -1, e o peso atribuido à mascara nesta coordenada:
+(-1,-1) -> [(1,1), 1]
+(-1,0) -> [(1,0), 2]
+(-1,1) -> [(1,-1), 1]
+(0,-1) -> [(0,1), 2]
+(0,0) -> [(0,0), 4]
+(0,1) -> [(0,-1), 2]
+(1,-1) -> [(-1,1), 1]
+(1,0) -> [(-1,0), 2]
+(1,1) -> [(-1,-1), 1]
+
+Para cada elemento deste conjunto, você deve transladar a imagem (que será considerada neste trabalho como zero-padded para tratamento de borda) pelo vetor-translacao e, em seguida, multiplicar a matriz transladada pelo respectivo peso associado.
+
+[(1,1), 1]           [(1,0), 2]           [(1,-1), 1]
+|0 0 0|               |0   0   0|          |0 0 0|
+|0 1 2|               |2   4   6|          |2 3 0|
+|0 4 5|               |8 10 12|          |5 6 0|
+
+[(0,1), 2]           [(0,0), 4]           [(0,-1), 2]
+|0  2    4|           |4    8  12|        |4     6   0|
+|0  8  10|           |16 20 24|        |10 12   0|
+|0 14 16|           |28 32 36|        |16 18   0|
+
+[(-1,1), 1]          [(-1,0), 2]          [(-1,-1), 1]
+|0 4 5|               |8   10  12|       |5 6 0|
+|0 7 8|               |14 16  18|       |8 9 0|
+|0 0 0|               |0    0     0|       |0 0 0|
+
+
+Em seguida, somam-se as imagens resultantes acima para a composicao do resultado final:
+|21   36   33|
+|52   80   68|
+|57   84   69|
+----------------------------------
+
+Considere em ambas as implementações que o tratamento de borda é por preenchimento com zeros.
+
+Os dois métodos devem ser implementados em Python 3.x, usando-se a biblioteca Numpy. Use a biblioteca OpenCV para carregar/salvar/mostrar as imagens.
+
+As duas implementações devem ser utilizadas para sobre uma mesma imagem. Os tempos de execução devem ser calculados para cada abordagem. Faça este experimento para diversas imagens e apresente os resultados (imagens resultantes e os tempos de execução calculados).
+
+Deverá constar no relatório um texto introdutório explicando a teoria considerada no trabalho, o código-fonte, as imagens resultantes de um ou mais experimentos de comparação e os resultados de comparação em relação ao tempo de execução.
+
+O arquivo a ser entregue deve ser compactado e conter o relatório, o código-fonte e as imagens de teste usadas para o relatório.
