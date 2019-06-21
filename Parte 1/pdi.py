@@ -84,9 +84,8 @@ height = im.size[1]
 
 for x in range(0, weigh):
     for y in range(0, height):
-
         pix[x,y] = distance_cal(coordenates, pix[x,y])
 
 im.show()
-nome_output = args.file.replace(".", "_colored.")
+nome_output = args.file.replace(".", "_colored_{}.".format(args.num_div) )
 im.save(nome_output)
